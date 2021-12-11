@@ -12,9 +12,9 @@ HEIGHT = 300
 # настройки ракеток
 
 # ширина ракетки
-PAD_W = 10
+Racket_Width = 10
 # высота ракетки
-PAD_H = 100
+Racket_Height = 100
 
 # настройки мяча
 # Насколько будет увеличиваться скорость мяча с каждым ударом
@@ -34,7 +34,7 @@ PLAYER_2_SCORE = 0
 
 # Добавим глобальную переменную отвечающую за расстояние
 # до правого края игрового поля
-right_line_distance = WIDTH - PAD_W
+right_line_distance = WIDTH - Racket_Width
 
 
 def update_score(player):
@@ -84,9 +84,9 @@ c.pack()
 # элементы игрового поля
 
 # левая линия
-c.create_line(PAD_W, 0, PAD_W, HEIGHT, fill="white")
+c.create_line(Racket_Width, 0, Racket_Width, HEIGHT, fill="white")
 # правая линия
-c.create_line(WIDTH - PAD_W, 0, WIDTH - PAD_W, HEIGHT, fill="white")
+c.create_line(WIDTH - Racket_Width, 0, WIDTH - Racket_Width, HEIGHT, fill="white")
 # центральная линия
 c.create_line(WIDTH / 2, 0, WIDTH / 2, HEIGHT, fill="white")
 
@@ -99,18 +99,18 @@ BALL = c.create_oval(WIDTH / 2 - BALL_RADIUS / 2,
                      HEIGHT / 2 + BALL_RADIUS / 2, fill="white")
 
 # левая ракетка
-LEFT_PAD = c.create_line(PAD_W / 2, 0, PAD_W / 2, PAD_H, width=PAD_W, fill="yellow")
+LEFT_Racket = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill="yellow")
 
 # правая ракетка
-RIGHT_PAD = c.create_line(WIDTH - PAD_W / 2, 0, WIDTH - PAD_W / 2,
-                          PAD_H, width=PAD_W, fill="yellow")
+RIGHT_Racket = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
+                          Racket_Height, width=Racket_Width, fill="yellow")
 
-p_1_text = c.create_text(WIDTH - WIDTH / 6, PAD_H / 4,
+p_1_text = c.create_text(WIDTH - WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_1_SCORE,
                          font="Arial 20",
                          fill="white")
 
-p_2_text = c.create_text(WIDTH / 6, PAD_H / 4,
+p_2_text = c.create_text(WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_2_SCORE,
                          font="Arial 20",
                          fill="white")
@@ -130,16 +130,16 @@ def move_ball():
     # вертикальный отскок
     # Если мы далеко от вертикальных линий - просто двигаем мяч
     if ball_right + BALL_X_SPEED < right_line_distance and \
-            ball_left + BALL_X_SPEED > PAD_W:
+            ball_left + BALL_X_SPEED > Racket_Width:
         c.move(BALL, BALL_X_SPEED, BALL_Y_SPEED)
     # Если мяч касается своей правой или левой стороной границы поля
-    elif ball_right == right_line_distance or ball_left == PAD_W:
+    elif ball_right == right_line_distance or ball_left == Racket_Width:
         # Проверяем правой или левой стороны мы касаемся
         if ball_right > WIDTH / 2:
             # Если правой, то сравниваем позицию центра мяча
             # с позицией правой ракетки.
             # И если мяч в пределах ракетки делаем отскок
-            if c.coords(RIGHT_PAD)[1] < ball_center < c.coords(RIGHT_PAD)[3]:
+            if c.coords(RIGHT_Racket)[1] < ball_center < c.coords(RIGHT_Racket)[3]:
                 bounce("strike")
             else:
                 # Иначе игрок пропустил - тут оставим пока pass, его мы заменим на подсчет очков и респаун мячика
@@ -147,7 +147,7 @@ def move_ball():
                 spawn_ball()
         else:
             # То же самое для левого игрока
-            if c.coords(LEFT_PAD)[1] < ball_center < c.coords(LEFT_PAD)[3]:
+            if c.coords(LEFT_Racket)[1] < ball_center < c.coords(LEFT_Racket)[3]:
                 bounce("strike")
             else:
                 update_score("right")
@@ -158,7 +158,7 @@ def move_ball():
         if ball_right > WIDTH / 2:
             c.move(BALL, right_line_distance - ball_right, BALL_Y_SPEED)
         else:
-            c.move(BALL, -ball_left + PAD_W, BALL_Y_SPEED)
+            c.move(BALL, -ball_left + Racket_Width, BALL_Y_SPEED)
     # горизонтальный отскок
     if ball_top + BALL_Y_SPEED < 0 or ball_bot + BALL_Y_SPEED > HEIGHT:
         bounce("ricochet")
@@ -166,34 +166,34 @@ def move_ball():
 
 # зададим глобальные переменные скорости движения ракеток
 # скорось с которой будут ездить ракетки
-PAD_SPEED = 20
+Racket_SPEED = 20
 # скорость левой платформы
-LEFT_PAD_SPEED = 0
+LEFT_Racket_SPEED = 0
 # скорость правой ракетки
-RIGHT_PAD_SPEED = 0
+RIGHT_Racket_SPEED = 0
 
 
 # функция движения обеих ракеток
-def move_pads():
+def move_Rackets():
     # для удобства создадим словарь, где ракетке соответствует ее скорость
-    PADS = {LEFT_PAD: LEFT_PAD_SPEED,
-            RIGHT_PAD: RIGHT_PAD_SPEED}
+    RacketS = {LEFT_Racket: LEFT_Racket_SPEED,
+            RIGHT_Racket: RIGHT_Racket_SPEED}
     # перебираем ракетки
-    for pad in PADS:
+    for Racket in RacketS:
         # двигаем ракетку с заданной скоростью
-        c.move(pad, 0, PADS[pad])
+        c.move(Racket, 0, RacketS[Racket])
         # если ракетка вылезает за игровое поле возвращаем ее на место
-        if c.coords(pad)[1] < 0:
-            c.move(pad, 0, -c.coords(pad)[1])
-        elif c.coords(pad)[3] > HEIGHT:
-            c.move(pad, 0, HEIGHT - c.coords(pad)[3])
+        if c.coords(Racket)[1] < 0:
+            c.move(Racket, 0, -c.coords(Racket)[1])
+        elif c.coords(Racket)[3] > HEIGHT:
+            c.move(Racket, 0, HEIGHT - c.coords(Racket)[3])
 
 
 def main():
     move_ball()
-    move_pads()
-    # вызываем саму себя каждые 30 миллисекунд
-    root.after(30, main)
+    move_Rackets()
+    # вызываем саму себя каждые 10 миллисекунд
+    root.after(10, main)
 
 
 # Установим фокус на Canvas чтобы он реагировал на нажатия клавиш
@@ -202,15 +202,15 @@ c.focus_set()
 
 # Напишем функцию обработки нажатия клавиш
 def movement_handler(event):
-    global LEFT_PAD_SPEED, RIGHT_PAD_SPEED
+    global LEFT_Racket_SPEED, RIGHT_Racket_SPEED
     if event.keysym == "w":
-        LEFT_PAD_SPEED = -PAD_SPEED
+        LEFT_Racket_SPEED = -Racket_SPEED
     elif event.keysym == "s":
-        LEFT_PAD_SPEED = PAD_SPEED
+        LEFT_Racket_SPEED = Racket_SPEED
     elif event.keysym == "Up":
-        RIGHT_PAD_SPEED = -PAD_SPEED
+        RIGHT_Racket_SPEED = -Racket_SPEED
     elif event.keysym == "Down":
-        RIGHT_PAD_SPEED = PAD_SPEED
+        RIGHT_Racket_SPEED = Racket_SPEED
 
 
 # Привяжем к Canvas эту функцию
@@ -218,16 +218,16 @@ c.bind("<KeyPress>", movement_handler)
 
 
 # Создадим функцию реагирования на отпускание клавиши
-def stop_pad(event):
-    global LEFT_PAD_SPEED, RIGHT_PAD_SPEED
+def stop_racket(event):
+    global LEFT_Racket_SPEED, RIGHT_Racket_SPEED
     if event.keysym in "ws":
-        LEFT_PAD_SPEED = 0
+        LEFT_Racket_SPEED = 0
     elif event.keysym in ("Up", "Down"):
-        RIGHT_PAD_SPEED = 0
+        RIGHT_Racket_SPEED = 0
 
 
 # Привяжем к Canvas эту функцию
-c.bind("<KeyRelease>", stop_pad)
+c.bind("<KeyRelease>", stop_racket)
 
 # запускаем движение
 main()
