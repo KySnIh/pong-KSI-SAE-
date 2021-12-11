@@ -99,10 +99,10 @@ BALL = c.create_oval(WIDTH / 2 - BALL_RADIUS / 2,
                      HEIGHT / 2 + BALL_RADIUS / 2, fill="white")
 
 # левая ракетка
-LEFT_Racket = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill="yellow")
+LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill="yellow")
 
 # правая ракетка
-RIGHT_Racket = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
+RIGHT_RACKET = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
                           Racket_Height, width=Racket_Width, fill="yellow")
 
 p_1_text = c.create_text(WIDTH - WIDTH / 6, Racket_Height / 4,
@@ -139,7 +139,7 @@ def move_ball():
             # Если правой, то сравниваем позицию центра мяча
             # с позицией правой ракетки.
             # И если мяч в пределах ракетки делаем отскок
-            if c.coords(RIGHT_Racket)[1] < ball_center < c.coords(RIGHT_Racket)[3]:
+            if c.coords(RIGHT_RACKET)[1] < ball_center < c.coords(RIGHT_RACKET)[3]:
                 bounce("strike")
             else:
                 # Иначе игрок пропустил - тут оставим пока pass, его мы заменим на подсчет очков и респаун мячика
@@ -147,7 +147,7 @@ def move_ball():
                 spawn_ball()
         else:
             # То же самое для левого игрока
-            if c.coords(LEFT_Racket)[1] < ball_center < c.coords(LEFT_Racket)[3]:
+            if c.coords(LEFT_RACKET)[1] < ball_center < c.coords(LEFT_RACKET)[3]:
                 bounce("strike")
             else:
                 update_score("right")
@@ -168,20 +168,20 @@ def move_ball():
 # скорось с которой будут ездить ракетки
 Racket_SPEED = 20
 # скорость левой платформы
-LEFT_Racket_SPEED = 0
+LEFT_RACKET_SPEED = 0
 # скорость правой ракетки
-RIGHT_Racket_SPEED = 0
+RIGHT_RACKET_SPEED = 0
 
 
 # функция движения обеих ракеток
-def move_Rackets():
+def move_rackets():
     # для удобства создадим словарь, где ракетке соответствует ее скорость
-    RacketS = {LEFT_Racket: LEFT_Racket_SPEED,
-            RIGHT_Racket: RIGHT_Racket_SPEED}
+    rackets = {LEFT_RACKET: LEFT_RACKET_SPEED,
+            RIGHT_RACKET: RIGHT_RACKET_SPEED}
     # перебираем ракетки
-    for Racket in RacketS:
+    for Racket in rackets:
         # двигаем ракетку с заданной скоростью
-        c.move(Racket, 0, RacketS[Racket])
+        c.move(Racket, 0, rackets[Racket])
         # если ракетка вылезает за игровое поле возвращаем ее на место
         if c.coords(Racket)[1] < 0:
             c.move(Racket, 0, -c.coords(Racket)[1])
@@ -191,9 +191,9 @@ def move_Rackets():
 
 def main():
     move_ball()
-    move_Rackets()
+    move_rackets()
     # вызываем саму себя каждые 10 миллисекунд
-    root.after(10, main)
+    root.after(20, main)
 
 
 # Установим фокус на Canvas чтобы он реагировал на нажатия клавиш
@@ -202,15 +202,15 @@ c.focus_set()
 
 # Напишем функцию обработки нажатия клавиш
 def movement_handler(event):
-    global LEFT_Racket_SPEED, RIGHT_Racket_SPEED
+    global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
     if event.keysym == "w":
-        LEFT_Racket_SPEED = -Racket_SPEED
+        LEFT_RACKET_SPEED = -Racket_SPEED
     elif event.keysym == "s":
-        LEFT_Racket_SPEED = Racket_SPEED
+        LEFT_RACKET_SPEED = Racket_SPEED
     elif event.keysym == "Up":
-        RIGHT_Racket_SPEED = -Racket_SPEED
+        RIGHT_RACKET_SPEED = -Racket_SPEED
     elif event.keysym == "Down":
-        RIGHT_Racket_SPEED = Racket_SPEED
+        RIGHT_RACKET_SPEED = Racket_SPEED
 
 
 # Привяжем к Canvas эту функцию
@@ -219,11 +219,11 @@ c.bind("<KeyPress>", movement_handler)
 
 # Создадим функцию реагирования на отпускание клавиши
 def stop_racket(event):
-    global LEFT_Racket_SPEED, RIGHT_Racket_SPEED
+    global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
     if event.keysym in "ws":
-        LEFT_Racket_SPEED = 0
+        LEFT_RACKET_SPEED = 0
     elif event.keysym in ("Up", "Down"):
-        RIGHT_Racket_SPEED = 0
+        RIGHT_RACKET_SPEED = 0
 
 
 # Привяжем к Canvas эту функцию
