@@ -71,14 +71,58 @@ def bounce(action):
             BALL_X_SPEED = -BALL_X_SPEED
     else:
         BALL_Y_SPEED = -BALL_Y_SPEED
-
+b = "white"
+a = "#003300"
+d = "yellow"
+def button_click():
+    global a
+    global b
+    global d
+    if a == "#003300":
+        a = "#000000"
+        c.configure(background=a)
+    elif a == "#000000":
+        a = "blue"
+        c.configure(background=a)
+    else:
+        a = "#003300"
+        c.configure(background=a)
+    if b == "white":
+        b = "yellow"
+        c.itemconfig(BALL,fill = b)
+    elif b == "yellow":
+        b = "black"
+        c.itemconfig(BALL, fill=b)
+    else:
+        b = "white"
+        c.itemconfig(BALL,fill = b)
+    if d == "yellow":
+        d = "red"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
+    elif d == "red":
+        d = "green"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
+    else:
+        d = "yellow"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
 
 # устанавливаем окно
 root = Tk()
 root.title("PythonicWay Pong")
+# устанавливаем кнопку для настроек
+root.title('12')
+root.geometry('900x325')
+btn = Button(text='Настройка цветовой гаммы', command=button_click)
+btn.pack()
+# btn2 = Button(text='Уменьшение скорости мячика', command=change_speed)
+# btn2.pack()
 
 # область анимации
-c = Canvas(root, width=WIDTH, height=HEIGHT, background="#003300")
+# #003300
+c = Canvas(root, width=WIDTH, height=HEIGHT, background=a)
 c.pack()
 
 # элементы игрового поля
@@ -96,14 +140,14 @@ c.create_line(WIDTH / 2, 0, WIDTH / 2, HEIGHT, fill="white")
 BALL = c.create_oval(WIDTH / 2 - BALL_RADIUS / 2,
                      HEIGHT / 2 - BALL_RADIUS / 2,
                      WIDTH / 2 + BALL_RADIUS / 2,
-                     HEIGHT / 2 + BALL_RADIUS / 2, fill="white")
+                     HEIGHT / 2 + BALL_RADIUS / 2, fill=b)
 
 # левая ракетка
-LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill="yellow")
+LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill=d)
 
 # правая ракетка
 RIGHT_RACKET = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
-                          Racket_Height, width=Racket_Width, fill="yellow")
+                          Racket_Height, width=Racket_Width, fill=d)
 
 p_1_text = c.create_text(WIDTH - WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_1_SCORE,
@@ -203,9 +247,9 @@ c.focus_set()
 # Напишем функцию обработки нажатия клавиш
 def movement_handler(event):
     global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
-    if event.keysym == "w":
+    if event.keysym in "Ww":
         LEFT_RACKET_SPEED = -Racket_SPEED
-    elif event.keysym == "s":
+    elif event.keysym in "Ss":
         LEFT_RACKET_SPEED = Racket_SPEED
     elif event.keysym == "Up":
         RIGHT_RACKET_SPEED = -Racket_SPEED
@@ -220,7 +264,7 @@ c.bind("<KeyPress>", movement_handler)
 # Создадим функцию реагирования на отпускание клавиши
 def stop_racket(event):
     global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
-    if event.keysym in "ws":
+    if event.keysym in "WwSs":
         LEFT_RACKET_SPEED = 0
     elif event.keysym in ("Up", "Down"):
         RIGHT_RACKET_SPEED = 0
@@ -234,4 +278,3 @@ main()
 
 # запускаем работу окна
 root.mainloop()
-
