@@ -60,8 +60,8 @@ BALL_RADIUS = 30
 """
 
 INITIAL_SPEED = 15
-BALL_X_SPEED = INITIAL_SPEED
-BALL_Y_SPEED = INITIAL_SPEED
+X_SPEED = INITIAL_SPEED
+Y_SPEED = INITIAL_SPEED
 
 """ 
 Очки игроков
@@ -241,6 +241,7 @@ p_2_text = c.create_text(WIDTH / 6, Racket_Height / 4,
 
 """ 
 Функция отвечающая за подсчёт очков
+На вход идёт забивший игрок
 """
 
 def update_score(player):
@@ -252,6 +253,7 @@ def update_score(player):
 
 """
 Функция изменяющая изображение счёта
+На вход идёт забивший игрок
 """
 
 def wrtie_updated_score(player):
@@ -269,15 +271,15 @@ def wrtie_updated_score(player):
 """
 
 def spawn_ball():
-    global BALL_X_SPEED
+    global X_SPEED
     c.coords(BALL, WIDTH / 2 - BALL_RADIUS / 2,
              HEIGHT / 2 - BALL_RADIUS / 2,
              WIDTH / 2 + BALL_RADIUS / 2,
              HEIGHT / 2 + BALL_RADIUS / 2)
-    if BALL_X_SPEED > 0:
-        BALL_X_SPEED = INITIAL_SPEED
+    if X_SPEED > 0:
+        X_SPEED = INITIAL_SPEED
     else:
-        BALL_X_SPEED = -INITIAL_SPEED
+        X_SPEED = -INITIAL_SPEED
 
 
 """ 
@@ -286,15 +288,15 @@ def spawn_ball():
 """
 
 def bounce(action):
-    global BALL_X_SPEED, BALL_Y_SPEED
+    global X_SPEED, Y_SPEED
     if action == "hor_reb":
-        BALL_Y_SPEED = -BALL_Y_SPEED
+        Y_SPEED = -Y_SPEED
     elif action == "hit":
-        BALL_Y_SPEED = random.randrange(-10, 10)
-        if abs(BALL_X_SPEED) >= BALL_MAX_SPEED:
-            BALL_X_SPEED = -BALL_X_SPEED
+        Y_SPEED = random.randrange(-10, 10)
+        if abs(X_SPEED) >= BALL_MAX_SPEED:
+            X_SPEED = -X_SPEED
         else:
-            BALL_X_SPEED *= -BALL_SPEED_UP
+            X_SPEED *= -BALL_SPEED_UP
 
 """ 
 Определяем положение мяча
@@ -314,12 +316,12 @@ def bounce(action):
 """
 
 def moving_ball():
-    ball_left, ball_top, ball_right, ball_bot = c.coords(BALL)
-    ball_center = (ball_top + ball_bot) / 2
-    if not ((ball_right + BALL_X_SPEED) >= right_line_distance or (ball_left + BALL_X_SPEED) <= Racket_Width):
-        c.move(BALL, BALL_X_SPEED, BALL_Y_SPEED)
-    elif ball_right == right_line_distance or ball_left == Racket_Width:
-        if ball_right > WIDTH / 2:
+    l, t, r, bot = c.coords(BALL)
+    ball_center = (t + bot) / 2
+    if not ((r + X_SPEED) >= right_line_distance or (l + X_SPEED) <= Racket_Width):
+        c.move(BALL, X_SPEED, Y_SPEED)
+    elif r == right_line_distance or l == Racket_Width:
+        if r > WIDTH / 2:
             if c.coords(RIGHT_RACKET)[1] < ball_center < c.coords(RIGHT_RACKET)[3]:
                 bounce("hit")
             else:
@@ -335,11 +337,11 @@ def moving_ball():
                 wrtie_updated_score("right")
                 spawn_ball()
     else:
-        if ball_right <= WIDTH / 2:
-            c.move(BALL, -ball_left + Racket_Width, BALL_Y_SPEED)
+        if r <= WIDTH / 2:
+            c.move(BALL, -l + Racket_Width, Y_SPEED)
         else:
-            c.move(BALL, right_line_distance - ball_right, BALL_Y_SPEED)
-    if ball_top + BALL_Y_SPEED < 0 or ball_bot + BALL_Y_SPEED > HEIGHT:
+            c.move(BALL, right_line_distance - r, Y_SPEED)
+    if t + Y_SPEED < 0 or bot + Y_SPEED > HEIGHT:
         bounce("hor_reb")
 
 
@@ -411,9 +413,7 @@ def KP_stop_racket(event):
 def start():
     moving_ball()
     move_rackets()
-
     root.after(17, start)
-
 
 """ 
 Добавим в Canvas

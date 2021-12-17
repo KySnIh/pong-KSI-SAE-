@@ -1,6 +1,5 @@
 import main
 
-
 def test_update_score():
     for i in range(100):
         main.update_score("right")
