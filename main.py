@@ -1,68 +1,70 @@
-from tkinter import *
-import random
 # Импортируем библиотеку tkinter для разработки графического интерфейса
 # Импортируем библиотеку random
+from tkinter import *
+import random
 
 # Добавляем глобальные переменные
 
+# Ширина и высота окна
 WIDTH = 1000
 HEIGHT = 400
-# Ширина и высота окна
 
-Racket_Width = 10
 # Ширина ракетки
+Racket_Width = 10
 
-Racket_Height = 100
 # Высота ракетки
+Racket_Height = 100
 
-BALL_SPEED_UP = 1.05
 # Изменение скорости после удара
+BALL_SPEED_UP = 1.05
 
-BALL_MAX_SPEED = 45
 # Максимальная скорость
+BALL_MAX_SPEED = 45
 
-BALL_RADIUS = 30
 # Радиус мяча
+BALL_RADIUS = 30
 
+# Начальная скорость мяча
 INITIAL_SPEED = 15
 X_SPEED = INITIAL_SPEED
 Y_SPEED = INITIAL_SPEED
-# Начальная скорость мяча
 
+# Очки игроков
 PLAYER_1_SCORE = 0
 PLAYER_2_SCORE = 0
-# Очки игроков
 
-right_line_distance = WIDTH - Racket_Width
 # Добавим глобальную переменную отвечающую за расстояние
 # до правого края игрового поля
+right_line_distance = WIDTH - Racket_Width
+
 
 # Добавим глобальные переменные отвечающие за цвета
 
+# Глобальная переменная а отвечает за цвет фона,глобальная переменная b за цвет шарика,
+# а глобальная переменная d за цвет ракеток
 b = "yellow"
 a = "#003300"
 d = "yellow"
-# Глобальная переменная а отвечает за цвет фона,глобальная переменная b за цвет шарика,
-# а глобальная переменная d за цвет ракеток
+
 
 # Добавим глобальные переменные для скорости движения мяча
 
-BALL_X_CHANGE = 20
 # По горизонтали
+BALL_X_CHANGE = 20
 
-BALL_Y_CHANGE = 0
 # По вертикали
+BALL_Y_CHANGE = 0
 
 # Зададим глобальные переменные скорости движения ракеток
 
-Racket_SPEED = 25
 # Скорость с которой будут ездить ракетки
+Racket_SPEED = 25
 
-LEFT_RACKET_SPEED = 0
 # Скорость левой ракетки
+LEFT_RACKET_SPEED = 0
 
-RIGHT_RACKET_SPEED = 0
 # Скорость правой ракетки
+RIGHT_RACKET_SPEED = 0
 
 def button_click():
     """
@@ -108,45 +110,44 @@ def button_click():
         c.itemconfig(LEFT_RACKET, fill=d)
         c.itemconfig(RIGHT_RACKET, fill=d)
 
+# Устанавливаем окно
 root = Tk()
 root.title("Pong_KSI_SAE")
 root.geometry('1000x425')
-# Устанавливаем окно
 
+# Устанавливаем кнопку для настроек
 btn = Button(text='Настройка цветовой гаммы', command=button_click )
 btn.pack()
-# Устанавливаем кнопку для настроек
 
+# Область анимации
 c = Canvas(root, width=WIDTH, height=HEIGHT, background=a)
 c.pack()
-# Область анимации
 
 # Установим игровые объекты
 
-c.create_line(Racket_Width, 0, Racket_Width, HEIGHT, fill="white")
-# Левая линия
-c.create_line(WIDTH - Racket_Width, 0, WIDTH - Racket_Width, HEIGHT, fill="white")
-# Правая линия
-c.create_line(WIDTH / 2, 0, WIDTH / 2, HEIGHT, fill="white")
-# Центральная линия
 # Создаём само поле
 
+# Левая линия
+c.create_line(Racket_Width, 0, Racket_Width, HEIGHT, fill="white")
+# Правая линия
+c.create_line(WIDTH - Racket_Width, 0, WIDTH - Racket_Width, HEIGHT, fill="white")
+# Центральная линия
+c.create_line(WIDTH / 2, 0, WIDTH / 2, HEIGHT, fill="white")
+
+# Создаем мяч
 BALL = c.create_oval(WIDTH / 2 - BALL_RADIUS / 2,
                      HEIGHT / 2 - BALL_RADIUS / 2,
                      WIDTH / 2 + BALL_RADIUS / 2,
                      HEIGHT / 2 + BALL_RADIUS / 2, fill=b)
-# Создаем мяч
 
-LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill=d)
 # Левая ракетка
+LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height, width=Racket_Width, fill=d)
 
+# Правая ракетка
 RIGHT_RACKET = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
                           Racket_Height, width=Racket_Width, fill=d)
-# Правая ракетка
 
-
-
-
+# Счёт игры первого и второго игроков
 p_1_text = c.create_text(WIDTH - WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_1_SCORE,
                          font="Calibri 18",
@@ -155,7 +156,7 @@ p_2_text = c.create_text(WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_2_SCORE,
                          font="Calibri 18",
                          fill="orange")
-# Счёт игры первого и второго игроков
+
 
 def update_score(player):
     """
@@ -203,7 +204,8 @@ def spawn_ball():
 def bounce(action):
     """
     Функция отвечающая за отскок мяча и удар ракеткой
-    action - действие происходящее с мячом удар или горзонатльный отскок
+    action - действие происходящее с мячом
+    удар - hit или горзонатльный отскок - hor_reb
     """
     global X_SPEED, Y_SPEED
     if action == "hor_reb":
@@ -263,8 +265,9 @@ def move_rackets():
         elif c.coords(Racket)[1] < 0:
             c.move(Racket, 0, -c.coords(Racket)[1])
 
-c.focus_set()
 # Сделаем так чтобы Canvas реагировал на нажатия клавиш
+c.focus_set()
+
 
 def KP_move_racket(event):
     """
@@ -281,10 +284,8 @@ def KP_move_racket(event):
     elif event.keysym in "Ss":
         LEFT_RACKET_SPEED = Racket_SPEED
 
-
-c.bind("<KeyPress>", KP_move_racket)
 # Добавим в Canvas
-
+c.bind("<KeyPress>", KP_move_racket)
 
 def KP_stop_racket(event):
     """
@@ -306,12 +307,11 @@ def start():
     moving_ball()
     move_rackets()
     root.after(17, start)
-
-c.bind("<KeyRelease>", KP_stop_racket)
 # Добавим в Canvas
+c.bind("<KeyRelease>", KP_stop_racket)
 
-start()
 # Запускаем игру
+start()
 
-root.mainloop()
 # Запускаем окно
+root.mainloop()
