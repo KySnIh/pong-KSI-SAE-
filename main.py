@@ -37,7 +37,7 @@ PLAYER_2_SCORE = 0
 # до правого края игрового поля
 right_line_distance = WIDTH - Racket_Width
 # Добавим глобальные переменные отвечающие за цыета
-b = "white"
+b = "yellow"
 a = "#003300"
 d = "yellow"
 
@@ -56,54 +56,54 @@ LEFT_RACKET_SPEED = 0
 RIGHT_RACKET_SPEED = 0
 
 def button_click():
-    # разные цветовые тематики
+    # смена цветовых тематик
     global a
     global b
     global d
     # цвет фона
     if a == "#003300":
         a = "#000000"
-        c.configure(background=a)
     elif a == "#000000":
         a = "blue"
-        c.configure(background=a)
-    else:
+    elif a == "blue":
         a = "#003300"
-        c.configure(background=a)
-    # цвет шарика
-    if b == "white":
-        b = "pink"
-        c.itemconfig(BALL,fill = b)
-    elif b == "pink":
+    # смена цветов шарика
+    if b == "yellow":
+        b = "red"
+    elif b == "red":
         b = "orange"
-        c.itemconfig(BALL, fill=b)
-    else:
-        b = "white"
-        c.itemconfig(BALL,fill = b)
-    # цвет ракеток
+    elif b == "orange":
+        b = "yellow"
+    # смена цветов ракеток
     if d == "yellow":
         d = "red"
-        c.itemconfig(LEFT_RACKET, fill=d)
-        c.itemconfig(RIGHT_RACKET, fill=d)
     elif d == "red":
         d = "orange"
-        c.itemconfig(LEFT_RACKET, fill=d)
-        c.itemconfig(RIGHT_RACKET, fill=d)
-    else:
+    elif d == "orange":
         d = "yellow"
-        c.itemconfig(LEFT_RACKET, fill=d)
-        c.itemconfig(RIGHT_RACKET, fill=d)
 
+
+def repainting():
+    # смена цветовых тематик
+    global a
+    global b
+    global d
+    # цвет фона
+    c.configure(background=a)
+    # цвет шарика
+    c.itemconfig(BALL, fill=b)
+    # цвет ракеток
+    c.itemconfig(LEFT_RACKET, fill=d)
+    c.itemconfig(RIGHT_RACKET, fill=d)
 # устанавливаем окно
 
 root = Tk()
 root.title("Pong_KSI_SAE")
-# устанавливаем кнопку для настроек
 root.geometry('1000x425')
-btn = Button(text='Настройка цветовой гаммы', command=button_click)
+# устанавливаем кнопку для настроек
+btn = Button(text='Настройка цветовой гаммы', command=button_click and repainting)
 btn.pack()
-# btn2 = Button(text='Уменьшение скорости мячика', command=change_speed)
-# btn2.pack()
+
 
 # область анимации
 # #003300
@@ -149,11 +149,16 @@ def update_score(player):
     global PLAYER_1_SCORE, PLAYER_2_SCORE
     if player == "right":
         PLAYER_1_SCORE += 1
-        c.itemconfig(p_1_text, text=PLAYER_1_SCORE)
     else:
         PLAYER_2_SCORE += 1
-        c.itemconfig(p_2_text, text=PLAYER_2_SCORE)
 
+
+def wrtie_updated_score(player):
+    global PLAYER_1_SCORE, PLAYER_2_SCORE
+    if player == "right":
+        c.itemconfig(p_1_text, text=PLAYER_1_SCORE)
+    else:
+        c.itemconfig(p_2_text, text=PLAYER_2_SCORE)
 
 def spawn_ball():
     global BALL_X_SPEED
@@ -185,11 +190,11 @@ def bounce(action):
 
 
 def moving_ball():
-    # определяем координаты мяча
+    # определяем положение мяча
     ball_left, ball_top, ball_right, ball_bot = c.coords(BALL)
     ball_center = (ball_top + ball_bot) / 2
     # вертикальный отскок
-    # Если мы далеко от вертикальных линий - просто двигаем мяч
+    # Если мы далеко от вертикальных линий просто передвигаем мяч
     if not ((ball_right + BALL_X_SPEED) >= right_line_distance or (ball_left + BALL_X_SPEED) <= Racket_Width):
         c.move(BALL, BALL_X_SPEED, BALL_Y_SPEED)
     # Если мяч касается своей правой или левой стороной границы поля
@@ -203,6 +208,7 @@ def moving_ball():
             else:
                 # Иначе игрок пропустил
                 update_score("left")
+                wrtie_updated_score("left")
                 spawn_ball()
         else:
             # Для левой сравниваем позицию центра мяча с позицией левой ракетки
@@ -212,6 +218,7 @@ def moving_ball():
             else:
                 # Иначе игрок пропустил
                 update_score("right")
+                wrtie_updated_score("right")
                 spawn_ball()
     # Проверка ситуации, в которой мячик может вылететь за границы игрового поля.
     # В таком случае просто возвращаем его к границе поля.
@@ -271,18 +278,18 @@ def KP_stop_racket(event):
         LEFT_RACKET_SPEED = 0
 
 
-def main():
+def start():
     moving_ball()
     move_rackets()
     # вызываем саму себя каждые 17 миллисекунд
-    root.after(17, main)
+    root.after(17, start)
 
 
 # добавим в Canvas
 c.bind("<KeyRelease>", KP_stop_racket)
 
 # запускаем игру
-main()
+start()
 
 # запускаем окно
 root.mainloop()
