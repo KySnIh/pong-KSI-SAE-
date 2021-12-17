@@ -1,3 +1,4 @@
+# импортируем библиотеку tkinter для разработки графического интерфейса
 from tkinter import *
 # импортируем библиотеку random
 import random
@@ -5,9 +6,9 @@ import random
 # Добавляем глобальные переменные
 
 # глобальные переменные
-# настройки окна
-WIDTH = 900
-HEIGHT = 300
+# ширина и высота окна
+WIDTH = 1000
+HEIGHT = 400
 
 # настройки ракеток
 
@@ -16,68 +17,50 @@ Racket_Width = 10
 # высота ракетки
 Racket_Height = 100
 
-# настройки мяча
-# Насколько будет увеличиваться скорость мяча с каждым ударом
+# мячик
+# изменение скорости после удара
 BALL_SPEED_UP = 1.05
-# Максимальная скорость мяча
-BALL_MAX_SPEED = 40
+# Максимальная скорость
+BALL_MAX_SPEED = 45
 # радиус мяча
 BALL_RADIUS = 30
-
-INITIAL_SPEED = 20
+# начальная скорость мяча
+INITIAL_SPEED = 15
 BALL_X_SPEED = INITIAL_SPEED
 BALL_Y_SPEED = INITIAL_SPEED
 
-# Счет игроков
+# Очки игроков
 PLAYER_1_SCORE = 0
 PLAYER_2_SCORE = 0
 
 # Добавим глобальную переменную отвечающую за расстояние
 # до правого края игрового поля
 right_line_distance = WIDTH - Racket_Width
-
-
-def update_score(player):
-    global PLAYER_1_SCORE, PLAYER_2_SCORE
-    if player == "right":
-        PLAYER_1_SCORE += 1
-        c.itemconfig(p_1_text, text=PLAYER_1_SCORE)
-    else:
-        PLAYER_2_SCORE += 1
-        c.itemconfig(p_2_text, text=PLAYER_2_SCORE)
-
-
-def spawn_ball():
-    global BALL_X_SPEED
-    # Выставляем мяч по центру
-    c.coords(BALL, WIDTH / 2 - BALL_RADIUS / 2,
-             HEIGHT / 2 - BALL_RADIUS / 2,
-             WIDTH / 2 + BALL_RADIUS / 2,
-             HEIGHT / 2 + BALL_RADIUS / 2)
-    # Задаем мячу направление в сторону проигравшего игрока,
-    # но снижаем скорость до изначальной
-    BALL_X_SPEED = -(BALL_X_SPEED * -INITIAL_SPEED) / abs(BALL_X_SPEED)
-
-
-# функция отскока мяча
-def bounce(action):
-    global BALL_X_SPEED, BALL_Y_SPEED
-    # ударили ракеткой
-    if action == "strike":
-        BALL_Y_SPEED = random.randrange(-10, 10)
-        if abs(BALL_X_SPEED) < BALL_MAX_SPEED:
-            BALL_X_SPEED *= -BALL_SPEED_UP
-        else:
-            BALL_X_SPEED = -BALL_X_SPEED
-    else:
-        BALL_Y_SPEED = -BALL_Y_SPEED
+# Добавим глобальные переменные отвечающие за цыета
 b = "white"
 a = "#003300"
 d = "yellow"
+
+# добавим глобальные переменные для скорости движения мяча
+# по горизонтали
+BALL_X_CHANGE = 20
+# по вертикали
+BALL_Y_CHANGE = 0
+
+# зададим глобальные переменные скорости движения ракеток
+# скорось с которой будут ездить ракетки
+Racket_SPEED = 25
+# скорость левой ракетки
+LEFT_RACKET_SPEED = 0
+# скорость правой ракетки
+RIGHT_RACKET_SPEED = 0
+
 def button_click():
+    # разные цветовые тематики
     global a
     global b
     global d
+    # цвет фона
     if a == "#003300":
         a = "#000000"
         c.configure(background=a)
@@ -87,21 +70,23 @@ def button_click():
     else:
         a = "#003300"
         c.configure(background=a)
+    # цвет шарика
     if b == "white":
-        b = "yellow"
+        b = "pink"
         c.itemconfig(BALL,fill = b)
-    elif b == "yellow":
-        b = "black"
+    elif b == "pink":
+        b = "orange"
         c.itemconfig(BALL, fill=b)
     else:
         b = "white"
         c.itemconfig(BALL,fill = b)
+    # цвет ракеток
     if d == "yellow":
         d = "red"
         c.itemconfig(LEFT_RACKET, fill=d)
         c.itemconfig(RIGHT_RACKET, fill=d)
     elif d == "red":
-        d = "green"
+        d = "orange"
         c.itemconfig(LEFT_RACKET, fill=d)
         c.itemconfig(RIGHT_RACKET, fill=d)
     else:
@@ -110,11 +95,11 @@ def button_click():
         c.itemconfig(RIGHT_RACKET, fill=d)
 
 # устанавливаем окно
+
 root = Tk()
-root.title("PythonicWay Pong")
+root.title("Pong_KSI_SAE")
 # устанавливаем кнопку для настроек
-root.title('12')
-root.geometry('900x325')
+root.geometry('1000x425')
 btn = Button(text='Настройка цветовой гаммы', command=button_click)
 btn.pack()
 # btn2 = Button(text='Уменьшение скорости мячика', command=change_speed)
@@ -125,7 +110,7 @@ btn.pack()
 c = Canvas(root, width=WIDTH, height=HEIGHT, background=a)
 c.pack()
 
-# элементы игрового поля
+# создаём само поле
 
 # левая линия
 c.create_line(Racket_Width, 0, Racket_Width, HEIGHT, fill="white")
@@ -134,7 +119,7 @@ c.create_line(WIDTH - Racket_Width, 0, WIDTH - Racket_Width, HEIGHT, fill="white
 # центральная линия
 c.create_line(WIDTH / 2, 0, WIDTH / 2, HEIGHT, fill="white")
 
-# установка игровых объектов
+# установим игровые объекты
 
 # создаем мяч
 BALL = c.create_oval(WIDTH / 2 - BALL_RADIUS / 2,
@@ -148,133 +133,156 @@ LEFT_RACKET = c.create_line(Racket_Width / 2, 0, Racket_Width / 2, Racket_Height
 # правая ракетка
 RIGHT_RACKET = c.create_line(WIDTH - Racket_Width / 2, 0, WIDTH - Racket_Width / 2,
                           Racket_Height, width=Racket_Width, fill=d)
-
+# счёт игры
 p_1_text = c.create_text(WIDTH - WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_1_SCORE,
-                         font="Arial 20",
-                         fill="white")
-
+                         font="Calibri 18",
+                         fill="purple")
 p_2_text = c.create_text(WIDTH / 6, Racket_Height / 4,
                          text=PLAYER_2_SCORE,
-                         font="Arial 20",
-                         fill="white")
-
-# добавим глобальные переменные для скорости движения мяча
-# по горизонтали
-BALL_X_CHANGE = 20
-# по вертикали
-BALL_Y_CHANGE = 0
+                         font="Calibri 18",
+                         fill="orange")
 
 
-def move_ball():
-    # определяем координаты сторон мяча и его центра
+def update_score(player):
+    # просто функция отвечающая за подсчёт очков
+    global PLAYER_1_SCORE, PLAYER_2_SCORE
+    if player == "right":
+        PLAYER_1_SCORE += 1
+        c.itemconfig(p_1_text, text=PLAYER_1_SCORE)
+    else:
+        PLAYER_2_SCORE += 1
+        c.itemconfig(p_2_text, text=PLAYER_2_SCORE)
+
+
+def spawn_ball():
+    global BALL_X_SPEED
+    # Ставим мяч по центру
+    c.coords(BALL, WIDTH / 2 - BALL_RADIUS / 2,
+             HEIGHT / 2 - BALL_RADIUS / 2,
+             WIDTH / 2 + BALL_RADIUS / 2,
+             HEIGHT / 2 + BALL_RADIUS / 2)
+    # Направляем мяч проигравшему игроку
+    # и снижаем скорость до изначальной
+    if BALL_X_SPEED > 0:
+        BALL_X_SPEED = INITIAL_SPEED
+    else:
+        BALL_X_SPEED = -INITIAL_SPEED
+
+
+# Отскок мяча
+def bounce(action):
+    global BALL_X_SPEED, BALL_Y_SPEED
+    # Удар ракеткой
+    if action == "hor_reb":
+        BALL_Y_SPEED = -BALL_Y_SPEED
+    elif action == "hit":
+        BALL_Y_SPEED = random.randrange(-10, 10)
+        if abs(BALL_X_SPEED) >= BALL_MAX_SPEED:
+            BALL_X_SPEED = -BALL_X_SPEED
+        else:
+            BALL_X_SPEED *= -BALL_SPEED_UP
+
+
+def moving_ball():
+    # определяем координаты мяча
     ball_left, ball_top, ball_right, ball_bot = c.coords(BALL)
     ball_center = (ball_top + ball_bot) / 2
-
     # вертикальный отскок
     # Если мы далеко от вертикальных линий - просто двигаем мяч
-    if ball_right + BALL_X_SPEED < right_line_distance and \
-            ball_left + BALL_X_SPEED > Racket_Width:
+    if not ((ball_right + BALL_X_SPEED) >= right_line_distance or (ball_left + BALL_X_SPEED) <= Racket_Width):
         c.move(BALL, BALL_X_SPEED, BALL_Y_SPEED)
     # Если мяч касается своей правой или левой стороной границы поля
     elif ball_right == right_line_distance or ball_left == Racket_Width:
         # Проверяем правой или левой стороны мы касаемся
         if ball_right > WIDTH / 2:
-            # Если правой, то сравниваем позицию центра мяча
-            # с позицией правой ракетки.
+            # Для правой сравниваем позицию центра мяча с позицией правой ракетки
             # И если мяч в пределах ракетки делаем отскок
             if c.coords(RIGHT_RACKET)[1] < ball_center < c.coords(RIGHT_RACKET)[3]:
-                bounce("strike")
+                bounce("hit")
             else:
-                # Иначе игрок пропустил - тут оставим пока pass, его мы заменим на подсчет очков и респаун мячика
+                # Иначе игрок пропустил
                 update_score("left")
                 spawn_ball()
         else:
-            # То же самое для левого игрока
+            # Для левой сравниваем позицию центра мяча с позицией левой ракетки
+            # И если мяч в пределах ракетки делаем отскок
             if c.coords(LEFT_RACKET)[1] < ball_center < c.coords(LEFT_RACKET)[3]:
-                bounce("strike")
+                bounce("hit")
             else:
+                # Иначе игрок пропустил
                 update_score("right")
                 spawn_ball()
     # Проверка ситуации, в которой мячик может вылететь за границы игрового поля.
-    # В таком случае просто двигаем его к границе поля.
+    # В таком случае просто возвращаем его к границе поля.
     else:
-        if ball_right > WIDTH / 2:
-            c.move(BALL, right_line_distance - ball_right, BALL_Y_SPEED)
-        else:
+        if ball_right <= WIDTH / 2:
             c.move(BALL, -ball_left + Racket_Width, BALL_Y_SPEED)
+        else:
+            c.move(BALL, right_line_distance - ball_right, BALL_Y_SPEED)
     # горизонтальный отскок
     if ball_top + BALL_Y_SPEED < 0 or ball_bot + BALL_Y_SPEED > HEIGHT:
-        bounce("ricochet")
-
-
-# зададим глобальные переменные скорости движения ракеток
-# скорось с которой будут ездить ракетки
-Racket_SPEED = 20
-# скорость левой платформы
-LEFT_RACKET_SPEED = 0
-# скорость правой ракетки
-RIGHT_RACKET_SPEED = 0
+        bounce("hor_reb")
 
 
 # функция движения обеих ракеток
 def move_rackets():
-    # для удобства создадим словарь, где ракетке соответствует ее скорость
+    # словарь ракетка - скорость
     rackets = {LEFT_RACKET: LEFT_RACKET_SPEED,
             RIGHT_RACKET: RIGHT_RACKET_SPEED}
     # перебираем ракетки
     for Racket in rackets:
-        # двигаем ракетку с заданной скоростью
+        # двигаем ракетку с её скоростью
         c.move(Racket, 0, rackets[Racket])
-        # если ракетка вылезает за игровое поле возвращаем ее на место
-        if c.coords(Racket)[1] < 0:
-            c.move(Racket, 0, -c.coords(Racket)[1])
-        elif c.coords(Racket)[3] > HEIGHT:
+        # если ракетка вылезает возвращаем
+        if c.coords(Racket)[3] > HEIGHT:
             c.move(Racket, 0, HEIGHT - c.coords(Racket)[3])
+        elif c.coords(Racket)[1] < 0:
+            c.move(Racket, 0, -c.coords(Racket)[1])
 
 
-def main():
-    move_ball()
-    move_rackets()
-    # вызываем саму себя каждые 10 миллисекунд
-    root.after(20, main)
-
-
-# Установим фокус на Canvas чтобы он реагировал на нажатия клавиш
+# сделаем так чтобы Canvas реагировал на нажатия клавиш
 c.focus_set()
 
 
-# Напишем функцию обработки нажатия клавиш
-def movement_handler(event):
+# реакция на нажатие клавиши
+def KP_move_racket(event):
     global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
-    if event.keysym in "Ww":
-        LEFT_RACKET_SPEED = -Racket_SPEED
-    elif event.keysym in "Ss":
-        LEFT_RACKET_SPEED = Racket_SPEED
-    elif event.keysym == "Up":
+    if event.keysym == "Up":
         RIGHT_RACKET_SPEED = -Racket_SPEED
     elif event.keysym == "Down":
         RIGHT_RACKET_SPEED = Racket_SPEED
+    elif event.keysym in "Ww":
+        LEFT_RACKET_SPEED = -Racket_SPEED
+    elif event.keysym in "Ss":
+        LEFT_RACKET_SPEED = Racket_SPEED
 
 
-# Привяжем к Canvas эту функцию
-c.bind("<KeyPress>", movement_handler)
+# добавим в Canvas
+c.bind("<KeyPress>", KP_move_racket)
 
 
-# Создадим функцию реагирования на отпускание клавиши
-def stop_racket(event):
+# реагирование на отпускание клавиши
+def KP_stop_racket(event):
     global LEFT_RACKET_SPEED, RIGHT_RACKET_SPEED
-    if event.keysym in "WwSs":
-        LEFT_RACKET_SPEED = 0
-    elif event.keysym in ("Up", "Down"):
+    if event.keysym in ("Up", "Down"):
         RIGHT_RACKET_SPEED = 0
+    elif event.keysym in "WwSs":
+        LEFT_RACKET_SPEED = 0
 
 
-# Привяжем к Canvas эту функцию
-c.bind("<KeyRelease>", stop_racket)
+def main():
+    moving_ball()
+    move_rackets()
+    # вызываем саму себя каждые 17 миллисекунд
+    root.after(17, main)
 
-# запускаем движение
+
+# добавим в Canvas
+c.bind("<KeyRelease>", KP_stop_racket)
+
+# запускаем игру
 main()
 
-# запускаем работу окна
+# запускаем окно
 root.mainloop()
