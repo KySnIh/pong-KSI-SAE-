@@ -8,7 +8,3 @@ def test_update_score():
         main.update_score("left")
     assert main.PLAYER_1_SCORE == 100
     assert main.PLAYER_2_SCORE == 50
-
-
-
-
