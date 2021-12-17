@@ -14,9 +14,6 @@ def test_button_click():
     for i in range(10):
         assert ((main.a == "#003300" and main.b == "yellow" and main.d == "yellow") or (main.a == "#000000" and main.b == "red" and main.d == "red") or (main.a == "blue" and main.b == "orange" and main.d == "orange"))
 
-def test_KP_stop_racket():
-
-
 
 
 

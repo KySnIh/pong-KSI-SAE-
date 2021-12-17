@@ -63,45 +63,45 @@ def button_click():
     # цвет фона
     if a == "#003300":
         a = "#000000"
+        c.configure(background=a)
     elif a == "#000000":
         a = "blue"
+        c.configure(background=a)
     elif a == "blue":
         a = "#003300"
+        c.configure(background=a)
     # смена цветов шарика
     if b == "yellow":
         b = "red"
+        c.itemconfig(BALL, fill=b)
     elif b == "red":
         b = "orange"
+        c.itemconfig(BALL, fill=b)
     elif b == "orange":
         b = "yellow"
+        c.itemconfig(BALL, fill=b)
     # смена цветов ракеток
     if d == "yellow":
         d = "red"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
     elif d == "red":
         d = "orange"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
     elif d == "orange":
         d = "yellow"
+        c.itemconfig(LEFT_RACKET, fill=d)
+        c.itemconfig(RIGHT_RACKET, fill=d)
 
 
-def repainting():
-    # смена цветовых тематик
-    global a
-    global b
-    global d
-    # цвет фона
-    c.configure(background=a)
-    # цвет шарика
-    c.itemconfig(BALL, fill=b)
-    # цвет ракеток
-    c.itemconfig(LEFT_RACKET, fill=d)
-    c.itemconfig(RIGHT_RACKET, fill=d)
 # устанавливаем окно
 
 root = Tk()
 root.title("Pong_KSI_SAE")
 root.geometry('1000x425')
 # устанавливаем кнопку для настроек
-btn = Button(text='Настройка цветовой гаммы', command=button_click and repainting)
+btn = Button(text='Настройка цветовой гаммы', command=button_click )
 btn.pack()
 
 
